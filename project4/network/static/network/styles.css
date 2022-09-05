@@ -1,0 +1,9 @@
+#comment :hover {
+    color: gray;
+}
+#like :hover {
+    color: red;
+}
+.dropdown-toggle::after {
+    content: none;
+}

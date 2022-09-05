@@ -1,0 +1,37 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<div class="container-fluid mt-2" id="allFollowing-container">
+    <div class="border mb-3 p-2">
+        <div class="row p-2">
+            <div class="col">
+                <strong style="cursor: pointer;">{{ user.username }}</strong>
+            </div>
+            <div class="col d-flex justify-content-end dropdown">
+                <a class="dropdown-toggle" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="true"
+                    style="color: black; cursor: pointer; font-size: 17px;">
+                    <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    <li><a class="dropdown-item" style="cursor: pointer;">edit</a></li>
+                </ul>
+                <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+                <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+            </div>
+        </div>
+        <div class="row p-3">
+            <br>
+            <br>
+            March 29, 2020, 11:40 pm
+        </div>
+        <div class="row">
+            <div class="col d-flex justify-content-center " style="gap: 40px">
+                <div><a id="like" style="color: black; cursor: pointer"><i class="bi bi-heart" style="font-size: 20px;">
+                            like</i></a></div>
+                <div><a id="comment" style="color:black; cursor: pointer"><i class="bi bi-chat"
+                            style="font-size: 20px;"> comment</i></a></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

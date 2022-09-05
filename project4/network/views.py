@@ -3,12 +3,38 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib import messages
 
+from .models import Post
 from .models import User
 
 
 def index(request):
-    return render(request, "network/index.html")
+    if request.method == "POST":
+        post = request.POST["text"]
+
+        if not post:
+            messages.warning(request, 'you must add post')
+            return HttpResponseRedirect(reverse("index"))
+            
+        createPost = Post.objects.create(
+            post=post,
+            userId = User.objects.get(pk = request.user.id)
+            
+        )
+        createPost.save()
+        messages.success(request, 'Post have be success')
+        return HttpResponseRedirect(reverse("index"))
+        
+    return render(request, "network/index.html", {
+        "posts" : Post.objects.all()
+    })
+
+def following(request):
+    return render(request, "network/following.html" )
+
+def profile(request):
+    return render(request, "network/profile.html")
 
 
 def login_view(request):

@@ -1,5 +1,62 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="container-fluid mt-2" id="allPost-container">
+    <h1>All Post</h1>
+    {% if user.is_authenticated %}
+    <form id="post-form" method="post">
+        {% csrf_token %}
+        <div class="border mb-3 p-3">
+            <label for="exampleFormControlTextarea1" class="form-label"><strong>New Post</strong></label>
+            <textarea class="form-control" id="post-text" name="text" rows="2"></textarea>
+            <button type="submit" class="btn btn-primary mt-2" id="post-submit">Submit</button>
+        </div>
+    </form>
+    {% endif %}
+
+    {% for post in posts %}
+        <div class="border mb-3 p-2">
+            <div class="row p-2">
+                <div class="col">
+                    <strong style="cursor: pointer;">{{ post.userId }}</strong>
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <a class="dropdown-toggle" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="true"
+                        style="color: black; cursor: pointer; font-size: 17px;">
+                        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                        <li><a class="dropdown-item" style="cursor: pointer;">edit</a></li>
+                    </ul>
+                    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+                    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+                </div>
+            </div>
+            <div class="p-1">
+                <div>{{ post.post }}</div>
+                <br>
+                <div class="d-flex justify-content-start time"> <p>Created {{ post.created_at }} </p></div>
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-center " style="gap: 40px">
+                    <div><a id="like" style="color: black; cursor: pointer"><i class="bi bi-heart" style="font-size: 20px;">
+                                like</i></a></div>
+                    <div><a id="comment" style="color:black; cursor: pointer"><i class="bi bi-chat"
+                                style="font-size: 20px;"> comment</i></a></div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 {% endblock %}

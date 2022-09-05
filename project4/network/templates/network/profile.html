@@ -1,0 +1,77 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<div id="profile-container" class="container-fluid">
+    <div class="d-flex justify-content-center mt-3">
+        <img class="rounded-circle" src="https://upload.wikimedia.org/wikipedia/commons/4/43/Cute_dog.jpg" width="130"
+            height="130">
+    </div>
+
+    <div class="text-center">
+        <h1 class="mt-2 ">Habib ashi</h1>
+        <div class="px-4">
+            <p class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                labore et dolore magna aliqua.</p>
+        </div>
+
+        <div class="d-flex justify-content-around mt-3 px-4">
+            <div class="d-flex flex-column">
+                <span class="font-weight-bold" style="font-size: 30px;">2</span>
+                <span class="text-sm-start text-danger">posts</span>
+            </div>
+
+            <div class="d-flex flex-column">
+                <span class="font-weight-bold" style="font-size: 30px;">97</span>
+                <span class="text-sm-start text-danger">Followers</span>
+            </div>
+
+            <div class="d-flex flex-column">
+                <span class="font-weight-bold" style="font-size: 30px;">47</span>
+                <span class="text-sm-start text-danger">Followings</span>
+            </div>
+        </div>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-light my-4" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            style="width: 150px;">
+            edit profile
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">edit profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="bi bi-x"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="bio" class="form-control" id="floatingInput" placeholder="change Bio">
+                            <label for="Change Bio">Email address</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="d-flex flex-row px-4 my-4 justify-content-center">
+            <button class="btn btn-danger text-white rounded" style="width: 310px;" id="hehe">Follow</button>
+            <button class="btn btn-danger text-white rounded" style="width: 310px;">Message</button>
+            <a class="dropdown-toggle" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="true" style="color: black; cursor: pointer; font-size: 17px;">
+                <button class="btn btn-light" style="width: 100px;">edit profile</button>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                <li><a class="dropdown-item" style="cursor: pointer;">change photo</a></li>
+                <li><a class="dropdown-item" style="cursor: pointer;">edit bio</a></li>
+                <li><a class="dropdown-item" style="cursor: pointer;">delete</a></li>
+            </ul>
+            
+        </div> -->
+    </div>
+{% endblock %}
