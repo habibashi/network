@@ -5,9 +5,10 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 
-from .models import Post
-from .models import User
+from .models import Post, User
 
+from django.core.paginator import Paginator, EmptyPage
+from django.shortcuts import render
 
 def index(request):
     if request.method == "POST":
@@ -25,10 +26,17 @@ def index(request):
         createPost.save()
         messages.success(request, 'Post have be success')
         return HttpResponseRedirect(reverse("index"))
-        
-    return render(request, "network/index.html", {
-        "posts" : Post.objects.all()
-    })
+    
+    contact_list = Post.objects.all()
+    paginator = Paginator(contact_list, 3) # Show 10 contacts per page.
+
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        page_obj = paginator.get_page(1)
+
+    return render(request, 'network/index.html', {'page_obj': page_obj})
 
 def following(request):
     return render(request, "network/following.html" )

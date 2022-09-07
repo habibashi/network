@@ -25,38 +25,83 @@
     </form>
     {% endif %}
 
-    {% for post in posts %}
-        <div class="border mb-3 p-2">
-            <div class="row p-2">
-                <div class="col">
-                    <strong style="cursor: pointer;">{{ post.userId }}</strong>
-                </div>
-                <div class="col d-flex justify-content-end">
-                    <a class="dropdown-toggle" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="true"
-                        style="color: black; cursor: pointer; font-size: 17px;">
-                        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                        <li><a class="dropdown-item" style="cursor: pointer;">edit</a></li>
-                    </ul>
-                    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-                    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-                </div>
+    {% for post in page_obj %}
+    <div class="border mb-3 p-2">
+        <div class="row p-2">
+            <div class="col">
+                <strong style="cursor: pointer;">{{ post.userId }}</strong>
             </div>
-            <div class="p-1">
-                <div>{{ post.post }}</div>
-                <br>
-                <div class="d-flex justify-content-start time"> <p>Created {{ post.created_at }} </p></div>
-            </div>
-            <div class="row">
-                <div class="col d-flex justify-content-center " style="gap: 40px">
-                    <div><a id="like" style="color: black; cursor: pointer"><i class="bi bi-heart" style="font-size: 20px;">
-                                like</i></a></div>
-                    <div><a id="comment" style="color:black; cursor: pointer"><i class="bi bi-chat"
-                                style="font-size: 20px;"> comment</i></a></div>
-                </div>
+            <div class="col d-flex justify-content-end">
+                <a class="dropdown-toggle" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="true"
+                    style="color: black; cursor: pointer; font-size: 17px;">
+                    <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    <li><a class="dropdown-item" style="cursor: pointer;">edit</a></li>
+                </ul>
+                <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+                <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
             </div>
         </div>
+        <div class="p-1">
+            <div>{{ post.post }}</div>
+            <br>
+            <div class="d-flex justify-content-start time">
+                <p>Created {{ post.created_at }} </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col d-flex justify-content-center " style="gap: 40px">
+                <div><a id="like" style="color: black; cursor: pointer"><i class="bi bi-heart" style="font-size: 20px;">
+                            like</i></a></div>
+                <div><a id="comment" style="color:black; cursor: pointer"><i class="bi bi-chat"
+                            style="font-size: 20px;"> comment</i></a></div>
+            </div>
+        </div>
+    </div>
     {% endfor %}
+
+    <!-- <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a class="page-item" href="{% url 'index' %}?page=1">&laquo; first</a>
+            <a class="page-item" href="{% url 'index' %}?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a class="page-item" href="{% url 'index' %}?page={{ page_obj.next_page_number }}">next</a>
+            <a class="page-item" href="{% url 'index' %}?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div> -->
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item d-flex">
+                {% if page_obj.has_previous %}
+                <a class="page-link" href="{% url 'index' %}?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                <a class="page-link" href="{% url 'index' %}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+            </li>
+            <li class="page-item"><a class="page-link">{{ page_obj.number }}</a></li>
+            <li class="page-item d-flex "> 
+                {% if page_obj.has_next %}
+                <a class="page-link" href="{% url 'index' %}?page={{ page_obj.next_page_number }}">next</a>
+                <a class="page-link" href="{% url 'index' %}?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+
+
+
 </div>
 {% endblock %}
