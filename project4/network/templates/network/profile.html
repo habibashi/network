@@ -32,25 +32,29 @@
         </div>
 
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-light my-4" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        <button type="button" class="btn btn-light my-4" data-bs-toggle="modal" data-bs-target="#exampleModal1"
             style="width: 150px;">
             edit profile
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">edit profile</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i
-                                class="bi bi-x"></i></button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-floating mb-3">
-                            <input type="bio" class="form-control" id="floatingInput" placeholder="change Bio">
-                            <label for="Change Bio">Email address</label>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="name" placeholder="edit name">
                         </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="changeBio" placeholder="change Bio">
+                        </div>
+                        <div class="mb-3">
+                            <input type="file" class="form-control" name="image" id="image">
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -60,18 +64,98 @@
             </div>
         </div>
 
-        <!-- <div class="d-flex flex-row px-4 my-4 justify-content-center">
+        <!-- <div class="d-flex flex-row px-4 my-4 justify-content-center" style="gap: 40px;">
             <button class="btn btn-danger text-white rounded" style="width: 310px;" id="hehe">Follow</button>
             <button class="btn btn-danger text-white rounded" style="width: 310px;">Message</button>
-            <a class="dropdown-toggle" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="true" style="color: black; cursor: pointer; font-size: 17px;">
-                <button class="btn btn-light" style="width: 100px;">edit profile</button>
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                <li><a class="dropdown-item" style="cursor: pointer;">change photo</a></li>
-                <li><a class="dropdown-item" style="cursor: pointer;">edit bio</a></li>
-                <li><a class="dropdown-item" style="cursor: pointer;">delete</a></li>
-            </ul>
-            
         </div> -->
+        {% for post in profilePost %}
+        <div class="border mb-3 p-2">
+            <div class="row p-2">
+                <div class="col d-flex">
+                    <strong style="cursor: pointer;">{{ post.user }}</strong>
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <a class="dropdown-toggle" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="true"
+                        style="color: black; cursor: pointer; font-size: 17px;">
+                        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                        <li><a class="dropdown-item" data-bs-target="#exampleModal" data-bs-toggle="modal"
+                                style="cursor: pointer;">edit</a></li>
+                    </ul>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">edit post</h5>
+                                </div>
+                                <form id="edit-post">
+                                    <div class="modal-body">
+                                        <div class="form-floating mb-3">
+                                            <textarea class="form-control" id="editPost" name="editPost" rows="2"
+                                                placeholder="edit post"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+                    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+                </div>
+            </div>
+            <div class="p-1">
+                <div class="d-flex">
+                    {{ post.text }}
+                </div>
+                <br>
+                <div class="d-flex justify-content-start time">
+                    <p>Created {{ post.created_at }} </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-center " style="gap: 40px">
+                    <div><a id="like" style="color: black; cursor: pointer"><i class="bi bi-heart"
+                                style="font-size: 20px;">
+                                like</i></a></div>
+                    <div><a id="comment" style="color:black; cursor: pointer"><i class="bi bi-chat"
+                                style="font-size: 20px;"> comment</i></a></div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item d-flex">
+                    {% if profilePost.has_previous %}
+                    <a class="page-link" href="{% url 'profile' %}?page=1" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    <a class="page-link"
+                        href="{% url 'profile' %}?page={{ profilePost.previous_page_number }}">previous</a>
+                    {% endif %}
+                </li>
+                <li class="page-item"><a class="page-link">{{ profilePost.number }}</a></li>
+                <li class="page-item d-flex ">
+                    {% if profilePost.has_next %}
+                    <a class="page-link" href="{% url 'profile' %}?page={{ profilePost.next_page_number }}">next</a>
+                    <a class="page-link" href="{% url 'profile' %}?page={{ profilePost.paginator.num_pages }}"
+                        aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+
     </div>
-{% endblock %}
+    {% endblock %}

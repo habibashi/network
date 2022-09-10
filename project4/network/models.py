@@ -10,32 +10,32 @@ class User(AbstractUser):
     bio = models.CharField(max_length=255, null=True)
 
 class Post(models.Model):
-    post = models.CharField(max_length=64)
-    userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    text = models.CharField(max_length=64)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.post} {self.userId} {self.created_at} {self.userId}"
+        return f"{self.text} {self.user} {self.created_at}"
 
 class Follow(models.Model):
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name= "following", null=True)
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name= "follower", null=True)
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name= "following", null=True)
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name= "followers", null=True)
 
     def __str__(self):
         return f"{self.following} {self.follower}"
 
 class Like(models.Model):
     like = models.BooleanField(default=False)
-    userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    postId = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f"{self.like} {self.userId} {self.postId}"
+        return f"{self.like} {self.user} {self.post}"
 
 class Comment(models.Model):
     comment = models.CharField(max_length=64)
-    userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    postId = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f"{self.comment} {self.userId} {self.postId}"
+        return f"{self.comment} {self.user} {self.post}"

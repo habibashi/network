@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 
-from .models import Post, User
+from .models import Follow, Post, User
 
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
@@ -19,8 +19,8 @@ def index(request):
             return HttpResponseRedirect(reverse("index"))
             
         createPost = Post.objects.create(
-            post=post,
-            userId = User.objects.get(pk = request.user.id)
+            text=post,
+            user = User.objects.get(pk = request.user.id)
             
         )
         createPost.save()
@@ -39,11 +39,34 @@ def index(request):
     return render(request, 'network/index.html', {'page_obj': page_obj})
 
 def following(request):
-    return render(request, "network/following.html" )
+    posts = Post.objects.filter(
+        user__followers__in = Follow.objects.filter(follower = request.user)
+    )
+    paginator = Paginator(posts, 3) # Show 10 contacts per page.
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        page_obj = paginator.get_page(1)
+    
+    return render(request, 'network/following.html', {'page_obj': page_obj})
 
 def profile(request):
-    return render(request, "network/profile.html")
+    contact_list = Post.objects.filter(user = request.user.id)
 
+    paginator = Paginator(contact_list, 3) # Show 10 contacts per page.
+
+    page_number = request.GET.get('page')
+    try:
+        profilePost = paginator.get_page(page_number)
+    except EmptyPage:
+        profilePost = paginator.get_page(1)
+
+    return render(request, 'network/profile.html', {'profilePost': profilePost})
+
+def editProfile(request):
+    
+    return render(request, 'network/profile.html')
 
 def login_view(request):
     if request.method == "POST":
