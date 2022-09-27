@@ -4,8 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
+from django.db.models import Exists, OuterRef
 
-from .models import Follow, Post, User
+from .models import *
 
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
@@ -26,6 +27,20 @@ def index(request):
         createPost.save()
         messages.success(request, 'Post have be success')
         return HttpResponseRedirect(reverse("index"))
+
+    if request.user.is_authenticated:
+        posts = Post.objects.annotate(
+            is_liked=Exists(
+                Like.objects.filter(user=request.user, post=OuterRef('pk'))
+            )
+        ).select_related('user')
+
+        paginator = Paginator(posts, 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, "network/index.html", {
+            'page_obj': page_obj
+        })
     
     contact_list = Post.objects.all()
     paginator = Paginator(contact_list, 3) # Show 10 contacts per page.
@@ -52,7 +67,11 @@ def following(request):
     return render(request, 'network/following.html', {'page_obj': page_obj})
 
 def profile(request):
-    contact_list = Post.objects.filter(user = request.user.id)
+    contact_list = Post.objects.annotate(
+            is_liked=Exists(
+                Like.objects.filter(user=request.user, post=OuterRef('pk'))
+            )
+        ).select_related('user')
 
     paginator = Paginator(contact_list, 3) # Show 10 contacts per page.
 
@@ -118,3 +137,22 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+def like(request, post_id):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    Like.objects.create(
+        user=request.user,
+        post=Post.objects.get(id=post_id),
+        like=True
+    )
+    return HttpResponse(status=204)
+
+def unlike(request, post_id):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    Like.objects.get(
+        user=request.user,
+        post=Post.objects.get(id=post_id)
+    ).delete()
+    return HttpResponse(status=204)

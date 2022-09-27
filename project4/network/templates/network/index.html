@@ -26,7 +26,7 @@
     {% endif %}
 
     {% for post in page_obj %}
-    <div class="border mb-3 p-2">
+    <div class="border mb-3 p-2" data-id="{{ post.id }}">
         <div class="row p-2">
             <div class="col d-flex">
                 <strong style="cursor: pointer;">{{ post.user }}</strong>
@@ -79,9 +79,19 @@
         </div>
         <div class="row">
             <div class="col d-flex justify-content-center " style="gap: 40px">
-                <div><a id="like" style="color: black; cursor: pointer"><i class="bi bi-heart" style="font-size: 20px;">
-                            like</i></a></div>
-                <div><a id="comment" style="color:black; cursor: pointer"><i class="bi bi-chat"
+                <div class="d-flex" style="gap: 7px">
+                    <div>
+                        {% if not post.is_liked %}
+                        <a style="cursor: pointer"><i id="like" data-action="like" class="bi bi-heart"
+                                style="font-size: 20px;"></i></a>
+                        {% else %}
+                        <a style="cursor: pointer"><i id="like" data-action="unlike" class="bi bi-heart-fill text-danger"
+                            style="font-size: 20px;"></i></a>
+                        {% endif %}
+                    </div> 
+                    <div>{{ post.postLiked.count }}</div>
+                </div>
+                <div><a id="comment" style="cursor: pointer"><i class="bi bi-chat"
                             style="font-size: 20px;"> comment</i></a></div>
             </div>
         </div>
