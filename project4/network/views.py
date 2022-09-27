@@ -39,7 +39,7 @@ def index(request):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         return render(request, "network/index.html", {
-            'page_obj': page_obj
+            'page_objects': page_obj
         })
     
     contact_list = Post.objects.all()
@@ -64,7 +64,7 @@ def following(request):
     except EmptyPage:
         page_obj = paginator.get_page(1)
     
-    return render(request, 'network/following.html', {'page_obj': page_obj})
+    return render(request, 'network/following.html', {'page_objects': page_obj})
 
 def profile(request):
     contact_list = Post.objects.annotate(
@@ -81,7 +81,7 @@ def profile(request):
     except EmptyPage:
         profilePost = paginator.get_page(1)
 
-    return render(request, 'network/profile.html', {'profilePost': profilePost})
+    return render(request, 'network/profile.html', {'page_objects': profilePost})
 
 def editProfile(request):
     
