@@ -28,3 +28,7 @@ like.forEach(i => {
         })
     })
 })
+
+
+const s = document.querySelector('#habib').closest('#abe')
+console.log(s)

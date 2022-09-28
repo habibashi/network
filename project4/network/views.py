@@ -43,7 +43,7 @@ def index(request):
         })
     
     contact_list = Post.objects.all()
-    paginator = Paginator(contact_list, 3) # Show 10 contacts per page.
+    paginator = Paginator(contact_list, 10) # Show 10 contacts per page.
 
     page_number = request.GET.get('page')
     try:
@@ -56,8 +56,13 @@ def index(request):
 def following(request):
     posts = Post.objects.filter(
         user__followers__in = Follow.objects.filter(follower = request.user)
+    ).annotate(
+        is_liked=Exists(
+            Like.objects.filter(user=request.user, post=OuterRef('pk')) 
+        )
     )
-    paginator = Paginator(posts, 3) # Show 10 contacts per page.
+
+    paginator = Paginator(posts, 10) # Show 10 contacts per page.
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)
@@ -66,8 +71,11 @@ def following(request):
     
     return render(request, 'network/following.html', {'page_objects': page_obj})
 
-def profile(request):
-    contact_list = Post.objects.annotate(
+def profile(request, user_id):
+
+    # profileId = Post.objects.filter()
+
+    contact_list = Post.objects.filter(user=user_id).annotate(
             is_liked=Exists(
                 Like.objects.filter(user=request.user, post=OuterRef('pk'))
             )
@@ -81,7 +89,10 @@ def profile(request):
     except EmptyPage:
         profilePost = paginator.get_page(1)
 
-    return render(request, 'network/profile.html', {'page_objects': profilePost})
+    return render(request, 'network/profile.html', {
+        'page_objects': profilePost,
+        "profile": User.objects.get(pk=user_id),
+    })
 
 def editProfile(request):
     
@@ -156,3 +167,11 @@ def unlike(request, post_id):
         post=Post.objects.get(id=post_id)
     ).delete()
     return HttpResponse(status=204)
+
+def follow (request, user_id):
+    Follow.objects.create(follower=request.user, following_id=user_id)
+    return HttpResponseRedirect(reverse("profile", kwargs={'user_id':user_id}))
+
+def unfollow(request, user_id):
+    Follow.objects.get(follower=request.user, following_id=user_id).delete()
+    return HttpResponseRedirect(reverse("profile", kwargs={'user_id':user_id}))
