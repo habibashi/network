@@ -72,16 +72,18 @@ def following(request):
     return render(request, 'network/following.html', {'page_objects': page_obj})
 
 def profile(request, user_id):
-
-    # profileId = Post.objects.filter()
-
+    followers = Follow.objects.filter(following_id=user_id).count()
+    following = Follow.objects.filter(follower_id=user_id).count()
     contact_list = Post.objects.filter(user=user_id).annotate(
             is_liked=Exists(
                 Like.objects.filter(user=request.user, post=OuterRef('pk'))
             )
         ).select_related('user')
 
-    paginator = Paginator(contact_list, 3) # Show 10 contacts per page.
+    postCount = Post.objects.filter(user=user_id).count()
+    is_followed = Follow.objects.filter(follower=request.user, following_id=user_id).exists() 
+
+    paginator = Paginator(contact_list, 3) # Show 3 contacts per page.
 
     page_number = request.GET.get('page')
     try:
@@ -91,7 +93,11 @@ def profile(request, user_id):
 
     return render(request, 'network/profile.html', {
         'page_objects': profilePost,
+        "is_followed": is_followed,
+        "followers": followers,
+        "following": following,
         "profile": User.objects.get(pk=user_id),
+        "postCount": postCount
     })
 
 def editProfile(request):
@@ -168,10 +174,34 @@ def unlike(request, post_id):
     ).delete()
     return HttpResponse(status=204)
 
-def follow (request, user_id):
+
+def follow(request, user_id):
     Follow.objects.create(follower=request.user, following_id=user_id)
-    return HttpResponseRedirect(reverse("profile", kwargs={'user_id':user_id}))
+    return HttpResponseRedirect(reverse("profile", kwargs=({"user_id": user_id})))
 
 def unfollow(request, user_id):
-    Follow.objects.get(follower=request.user, following_id=user_id).delete()
-    return HttpResponseRedirect(reverse("profile", kwargs={'user_id':user_id}))
+    Follow.objects.filter(follower=request.user, following_id=user_id).delete()
+    return HttpResponseRedirect(reverse("profile", kwargs=({"user_id": user_id})))
+
+def comment(request, user_id):
+    if request.method == "POST":
+        comment = request.POST["comment"]
+    
+        if not comment:
+            messages.warning(request, 'you must add comment')
+            return HttpResponseRedirect(reverse("comment", kwargs={'user_id':user_id}))
+
+        addcomment = Comment.objects.create(
+            comment = comment,
+            user = User.objects.get(pk = request.user.id),
+            post = Post.objects.get(pk=user_id),
+        ) 
+        addcomment.save()
+        
+        messages.success(request, 'comment have be success')
+        return HttpResponseRedirect(reverse("comment", args=(user_id,)))
+
+    return render(request, "network/comments.html", {
+        "comment": Post.objects.get(pk = user_id),
+        "selectComment": Comment.objects.filter(post = user_id),
+    })

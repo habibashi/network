@@ -3,12 +3,11 @@
 {% block body %}
 <div id="profile-container" class="container-fluid">
     <div class="d-flex justify-content-center mt-3">
-        <img class="rounded-circle" src="https://upload.wikimedia.org/wikipedia/commons/4/43/Cute_dog.jpg" width="130"
-            height="130">
+        <img class="rounded-circle" src="https://pbs.twimg.com/media/EFIv5HzUcAAdjhl.png" width="130" height="130">
     </div>
 
     <div class="text-center">
-        <h1 class="mt-2 ">Habib ashi</h1>
+        <h1 class="mt-2 ">{{ profile.username }}</h1>
         <div class="px-4">
             <p class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                 labore et dolore magna aliqua.</p>
@@ -16,17 +15,17 @@
 
         <div class="d-flex justify-content-around mt-3 px-4">
             <div class="d-flex flex-column">
-                <span class="font-weight-bold" style="font-size: 30px;">2</span>
+                <span class="font-weight-bold" style="font-size: 30px;">{{ postCount }}</span>
                 <span class="text-sm-start text-danger">posts</span>
             </div>
 
             <div class="d-flex flex-column">
-                <span class="font-weight-bold" style="font-size: 30px;">97</span>
+                <span class="font-weight-bold" style="font-size: 30px;">{{ followers }}</span>
                 <span class="text-sm-start text-danger">Followers</span>
             </div>
 
             <div class="d-flex flex-column">
-                <span class="font-weight-bold" style="font-size: 30px;">47</span>
+                <span class="font-weight-bold" style="font-size: 30px;">{{ following }}</span>
                 <span class="text-sm-start text-danger">Followings</span>
             </div>
         </div>
@@ -38,9 +37,19 @@
             edit profile
         </button>
         {% else %}
-        <div class="d-flex flex-row px-4 my-4 justify-content-center" style="gap: 40px;">
-            <button class="btn btn-danger text-white rounded" style="width: 310px;" id="hehe">Follow</button>
-        </div>
+        {% if not is_followed %}
+        <a class="text-decoration-none" href="{% url 'follow' profile.id %}">
+            <div class="d-flex flex-row px-4 my-4 justify-content-center" style="gap: 40px;">
+                <button class="btn btn-danger text-white rounded" style="width: 310px;" id="hehe">Follow</button>
+            </div>
+        </a>
+        {% else %}
+        <a class="text-decoration-none" href="{% url 'unfollow' profile.id %}">
+            <div class="d-flex flex-row px-4 my-4 justify-content-center" style="gap: 40px;">
+                <button class="btn btn-danger text-white rounded " style="width: 310px;" id="hehe">Unfollow</button>
+            </div>
+        </a>
+        {% endif %}
         {% endif %}
 
         <!-- Modal -->

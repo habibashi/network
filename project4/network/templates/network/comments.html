@@ -1,0 +1,61 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<br>
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+<form action="{% url 'comment' comment.id %}" method="post">
+    {% csrf_token %}
+    <div>
+        <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+            <div class="d-flex flex-start w-100">
+                <div class="form-outline w-100">
+                  <textarea class="form-control" placeholder="add comment" type="text" id="textAreaExample" name="comment" rows="4"
+                    style="background: #fff;"></textarea>
+                </div>
+            </div>
+            <div class="float-end mt-2 pt-1">
+                <input type="submit" class="btn btn-primary btn-sm" value="Post comment" >
+            </div>
+        </div>
+    </div>
+</form>
+
+{% for selectcomment in selectComment %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="d-flex flex-start">
+        <div class="w-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="text-primary fw-bold mb-0">
+                <span class="text-primary">{{ selectcomment.user }}</span></span>
+              </h6>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="text-primary fw-bold mb-0">
+                <span class="text-dark ms-2">{{ selectcomment.comment }}<span class="text-primary"></span></span>
+              </h6>
+              <p class="mb-0">{{ comment.created_at }}</p>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="small mb-0" style="color: #aaa;">
+              </p>
+              <div class="d-flex flex-row">
+                <i class="far fa-check-circle text-primary"></i>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>         
+{% endfor %}
+
+{% endblock %}
