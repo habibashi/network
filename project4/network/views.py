@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -5,6 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 from django.db.models import Exists, OuterRef
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import *
 
@@ -118,6 +120,7 @@ def editProfile(request, user_id):
 
     return render(request, 'network/profile.html')
 
+
 def login_view(request):
     if request.method == "POST":
 
@@ -219,3 +222,15 @@ def comment(request, user_id):
         "comment": Post.objects.get(pk = user_id),
         "selectComment": Comment.objects.filter(post = user_id),
     })
+
+# def deletePost(request, delete_id):
+#     return render(request, 'network/profile.html')
+
+@csrf_exempt
+def editPost(request, post_id):
+    post = Post.objects.get(pk=post_id);
+    data = json.loads(request.body)
+    if data.get("newPost") is not None:
+        post.text = data["newPost"]
+    post.save()
+    return HttpResponse(status=204)

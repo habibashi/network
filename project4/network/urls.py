@@ -13,6 +13,8 @@ urlpatterns = [
     path("editProfile/<int:user_id>", views.editProfile, name="editProfile"),
     path("comment/<int:user_id>", views.comment, name="comment"),
     path("editProfile", views.editProfile, name="editProfile"),
+    path("editPost/<int:post_id>", views.editPost, name="editPost"),
+    # path("deletePost/<int:delete_id>", views.deletePost, name="deletePost"),
 
     path("follow/<int:user_id>", views.follow, name="follow"),
     path("unfollow/<int:user_id>", views.unfollow, name="unfollow"),

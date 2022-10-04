@@ -19,47 +19,27 @@
                 </div>
             </a>
         </div>
-        <div class="col d-flex justify-content-end">
+        {% if post.user.id == user.id %}
+        <div id="hey" class="col d-flex justify-content-end">
             <a class="dropdown-toggle" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="true"
                 style="color: black; cursor: pointer; font-size: 17px;">
-                <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+                <ion-icon  name="ellipsis-horizontal-outline" ></ion-icon>
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                <li><a class="dropdown-item" data-bs-target="#exampleModal" data-bs-toggle="modal"
-                        style="cursor: pointer;">edit</a></li>
+                <li>
+                    <a class="dropdown-item" onclick="editPost(this, event)" style="cursor: pointer;">edit</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" style="cursor: pointer;">delete</a>
+                </li>
             </ul>
-
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">edit post</h5>
-                        </div>
-                        <form id="edit-post">
-                            <div class="modal-body">
-                                <div class="form-floating mb-3">
-                                    <textarea class="form-control" id="editPost" name="editPost" rows="2"
-                                        placeholder="edit post"></textarea>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
             <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
             <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
         </div>
+        {% endif %}
     </div>
     <div class="p-1">
-        <div class="d-flex">
-            {{ post.text }}
-        </div>
+        <div class="d-flex">{{ post.text }}</div>
         <br>
         <div class="d-flex justify-content-start time">
             <p>Created {{ post.created_at }} </p>
@@ -79,7 +59,8 @@
                 </div>
                 <div>{{ post.postLiked.count }}</div>
             </div>
-            <div><a class="text-decoration-none text-dark" href="{% url 'comment' post.id %}" id="comment" style="cursor: pointer"><i class="bi bi-chat" style="font-size: 20px;"> comment</i></a>
+            <div><a class="text-decoration-none text-dark" href="{% url 'comment' post.id %}" id="comment"
+                    style="cursor: pointer"><i class="bi bi-chat" style="font-size: 20px;"> comment</i></a>
             </div>
         </div>
     </div>
@@ -107,5 +88,3 @@
         </li>
     </ul>
 </nav>
-
-

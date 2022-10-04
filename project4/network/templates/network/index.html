@@ -19,15 +19,13 @@
         {% csrf_token %}
         <div class="border mb-3 p-3">
             <label for="exampleFormControlTextarea1" class="form-label"><strong>New Post</strong></label>
-            <textarea class="form-control" id="post-text" name="text" rows="2"></textarea>
+            <textarea class="form-control" id="post-text" name="text"></textarea>
             <button type="submit" class="btn btn-primary mt-2" id="post-submit">Submit</button>
         </div>
     </form>
     {% endif %}
 
     {% include "network/post.html" %}
-
-
 
 </div>
 {% endblock %}
