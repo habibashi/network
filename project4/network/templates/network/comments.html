@@ -1,7 +1,6 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-<br>
 {% if messages %}
 {% for message in messages %}
 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -12,6 +11,7 @@
 </div>
 {% endfor %}
 {% endif %}
+<br>
 <form action="{% url 'comment' comment.id %}" method="post">
     {% csrf_token %}
     <div>

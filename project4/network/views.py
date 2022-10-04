@@ -100,8 +100,22 @@ def profile(request, user_id):
         "postCount": postCount
     })
 
-def editProfile(request):
-    
+def editProfile(request, user_id):
+    if request.method == "POST":
+        image = request.POST["image"]
+        bio = request.POST["changeBio"]
+
+        if not image or not bio:
+            messages.warning(request, 'you must edit bio and image')
+            return HttpResponseRedirect(reverse("profile", kwargs={"user_id": user_id}))
+            
+        user = User.objects.get(pk=user_id)
+        user.bio = bio
+        user.image = image
+        user.save()
+        messages.success(request, 'profile have ben added')
+        return HttpResponseRedirect(reverse("profile", kwargs={"user_id": user_id}))
+
     return render(request, 'network/profile.html')
 
 def login_view(request):

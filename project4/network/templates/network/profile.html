@@ -1,16 +1,26 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+
 <div id="profile-container" class="container-fluid">
     <div class="d-flex justify-content-center mt-3">
-        <img class="rounded-circle" src="https://pbs.twimg.com/media/EFIv5HzUcAAdjhl.png" width="130" height="130">
+        <a href="/media/{{ profile.image }}"><img class="rounded-circle" src="/media/{{ profile.image }}" width="130" height="130"></a>
     </div>
 
     <div class="text-center">
         <h1 class="mt-2 ">{{ profile.username }}</h1>
         <div class="px-4">
-            <p class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                labore et dolore magna aliqua.</p>
+            <p class="">{{ profile.bio }}</p>
         </div>
 
         <div class="d-flex justify-content-around mt-3 px-4">
@@ -59,22 +69,26 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">edit profile</h5>
                     </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <input type="text" class="form-control" id="name" placeholder="edit name">
+                    <form action="{% url 'editProfile' profile.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <!-- <div class="mb-3">
+                                <input type="text" class="form-control" id="name" placeholder="edit name">
+                            </div> -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" name="changeBio" id="changeBio" placeholder="change Bio">
+                            </div>
+                            {{ image }}
+                            <div class="mb-3">
+                                <input autofocus type="file" class="form-control" name="image" id="image">
+                            </div>
+                            {{ bio }}
                         </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="changeBio" placeholder="change Bio">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
-                        <div class="mb-3">
-                            <input type="file" class="form-control" name="image" id="image">
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -79,7 +79,7 @@
                 </div>
                 <div>{{ post.postLiked.count }}</div>
             </div>
-            <div><a href="{% url 'comment' post.id %}" id="comment" style="cursor: pointer"><i class="bi bi-chat" style="font-size: 20px;"> comment</i></a>
+            <div><a class="text-decoration-none text-dark" href="{% url 'comment' post.id %}" id="comment" style="cursor: pointer"><i class="bi bi-chat" style="font-size: 20px;"> comment</i></a>
             </div>
         </div>
     </div>
