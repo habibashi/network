@@ -7,9 +7,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.db.models import Exists, OuterRef
 from django.views.decorators.csrf import csrf_exempt
-
 from .models import *
-
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
 
@@ -24,9 +22,8 @@ def index(request):
         createPost = Post.objects.create(
             text=post,
             user = User.objects.get(pk = request.user.id)
-            
         )
-        createPost.save()
+        createPost.save()   
         messages.success(request, 'Post have be success')
         return HttpResponseRedirect(reverse("index"))
 
@@ -44,7 +41,7 @@ def index(request):
             'page_objects': page_obj
         })
     
-    contact_list = Post.objects.all()
+    contact_list = Post.objects.all().order_by('created_at')[::-1]
     paginator = Paginator(contact_list, 10) # Show 10 contacts per page.
 
     page_number = request.GET.get('page')
@@ -83,9 +80,9 @@ def profile(request, user_id):
         ).select_related('user')
 
     postCount = Post.objects.filter(user=user_id).count()
-    is_followed = Follow.objects.filter(follower=request.user, following_id=user_id).exists() 
+    is_followed = Follow.objects.filter(follower=request.user, following_id=user_id).exists()
 
-    paginator = Paginator(contact_list, 3) # Show 3 contacts per page.
+    paginator = Paginator(contact_list, 10) # Show 10 contacts per page.
 
     page_number = request.GET.get('page')
     try:
@@ -223,9 +220,6 @@ def comment(request, user_id):
         "selectComment": Comment.objects.filter(post = user_id),
     })
 
-# def deletePost(request, delete_id):
-#     return render(request, 'network/profile.html')
-
 @csrf_exempt
 def editPost(request, post_id):
     post = Post.objects.get(pk=post_id);
@@ -234,3 +228,11 @@ def editPost(request, post_id):
         post.text = data["newPost"]
     post.save()
     return HttpResponse(status=204)
+
+
+def deletePost(request, delete_id):
+    try:
+        Post.objects.get(pk=delete_id).delete()
+    except:
+        return HttpResponse(status=502)
+    return HttpResponse(status=200)

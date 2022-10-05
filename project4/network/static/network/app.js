@@ -72,3 +72,17 @@ const editPost = (el, event) => {
         });
     };
 };
+
+const deletePost = (el, event) => {
+    event.stopPropagation();
+  
+    let postId = el.closest('div[data-id]').dataset.id;
+    fetch(`/deletePost/${postId}`).then((response) => {
+      if (response.status === 200)
+        window.location.replace('/');
+      else {
+        let post = el.closest('div[data-id]');
+        post.remove();
+      }
+    });
+  };
