@@ -1,3 +1,4 @@
+from email.policy import default
 from operator import mod
 from statistics import mode
 from django.utils import timezone
@@ -6,7 +7,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    image = models.ImageField(max_length=700, null=True)
+    image = models.ImageField(default="empty.jpg",blank=True, max_length=700, null=True)
     bio = models.CharField(max_length=255, null=True)
 
 class Post(models.Model):

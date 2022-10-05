@@ -32,7 +32,7 @@ def index(request):
             is_liked=Exists(
                 Like.objects.filter(user=request.user, post=OuterRef('pk'))
             )
-        ).select_related('user')
+        ).select_related('user').order_by('created_at')[::-1]
 
         paginator = Paginator(posts, 10)
         page_number = request.GET.get('page')
@@ -41,7 +41,7 @@ def index(request):
             'page_objects': page_obj
         })
     
-    contact_list = Post.objects.all().order_by('created_at')[::-1]
+    contact_list = Post.objects.all().select_related('user').order_by('created_at')[::-1]
     paginator = Paginator(contact_list, 10) # Show 10 contacts per page.
 
     page_number = request.GET.get('page')
@@ -59,7 +59,7 @@ def following(request):
         is_liked=Exists(
             Like.objects.filter(user=request.user, post=OuterRef('pk')) 
         )
-    )
+    ).select_related('user').order_by('created_at')[::-1]
 
     paginator = Paginator(posts, 10) # Show 10 contacts per page.
     page_number = request.GET.get('page')
@@ -77,11 +77,10 @@ def profile(request, user_id):
             is_liked=Exists(
                 Like.objects.filter(user=request.user, post=OuterRef('pk'))
             )
-        ).select_related('user')
+        ).select_related('user').select_related('user').order_by('created_at')[::-1]
 
     postCount = Post.objects.filter(user=user_id).count()
-    is_followed = Follow.objects.filter(follower=request.user, following_id=user_id).exists()
-
+    is_followed = Follow.objects.filter(follower=request.user, following_id=user_id)
     paginator = Paginator(contact_list, 10) # Show 10 contacts per page.
 
     page_number = request.GET.get('page')
@@ -103,17 +102,20 @@ def editProfile(request, user_id):
     if request.method == "POST":
         image = request.POST["image"]
         bio = request.POST["changeBio"]
-
-        if not image or not bio:
-            messages.warning(request, 'you must edit bio and image')
-            return HttpResponseRedirect(reverse("profile", kwargs={"user_id": user_id}))
-            
         user = User.objects.get(pk=user_id)
-        user.bio = bio
-        user.image = image
+
+        if image:
+            user.image = image
+            user.save()
+            return HttpResponseRedirect(reverse("profile", kwargs={"user_id": user_id}))
+        if bio:
+            user.bio = bio
+            user.save()
+            return HttpResponseRedirect(reverse("profile", kwargs={"user_id": user_id}))
+
+        user.bio = user.bio
+        user.image = user.image
         user.save()
-        messages.success(request, 'profile have ben added')
-        return HttpResponseRedirect(reverse("profile", kwargs={"user_id": user_id}))
 
     return render(request, 'network/profile.html')
 
